@@ -171,6 +171,7 @@ function LoadingScreen({ onLoadingComplete }: { onLoadingComplete: () => void })
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [currentPhase, setCurrentPhase] = useState(0)
   const [glitchText, setGlitchText] = useState("INITIALIZING...")
+  const [showStartButton, setShowStartButton] = useState(false)
 
   const loadingPhases = [
     "INITIALIZING NEURAL NETWORK...",
@@ -188,7 +189,8 @@ function LoadingScreen({ onLoadingComplete }: { onLoadingComplete: () => void })
         const newProgress = prev + Math.random() * 15
         if (newProgress >= 100) {
           clearInterval(interval)
-          setTimeout(() => onLoadingComplete(), 1000)
+          setShowStartButton(true)
+          setGlitchText("SYSTEM READY - CLICK TO ENTER")
           return 100
         }
         return newProgress
@@ -196,7 +198,7 @@ function LoadingScreen({ onLoadingComplete }: { onLoadingComplete: () => void })
     }, 200)
 
     return () => clearInterval(interval)
-  }, [onLoadingComplete])
+  }, [])
 
   useEffect(() => {
     const phaseInterval = setInterval(() => {
@@ -341,6 +343,22 @@ function LoadingScreen({ onLoadingComplete }: { onLoadingComplete: () => void })
             </div>
           </div>
         </div>
+
+        {/* Start Button */}
+        {showStartButton && (
+          <div className="mt-8 animate-pulse">
+            <button
+              onClick={onLoadingComplete}
+              className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-bold text-lg rounded-lg border border-cyan-500 hover:border-purple-500 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50"
+            >
+              <span className="flex items-center space-x-2">
+                <span>ENTER THE GRID</span>
+                <span className="text-xl">→</span>
+              </span>
+            </button>
+            <p className="text-xs text-gray-500 mt-2 font-mono">CLICK TO ACCESS PORTFOLIO</p>
+          </div>
+        )}
 
         {/* Floating particles */}
         <div className="absolute inset-0 pointer-events-none">
